@@ -1,5 +1,153 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple POS System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h2 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        .total {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: right;
+        }
+        .total span {
+            color: green;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .btn:disabled {
+            background-color: #ccc;
+        }
+        .btn-remove {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
 <body>
-hinnnn
+
+<div class="container">
+    <h2>POS System</h2>
+
+    <div>
+        <label for="product">Product: </label>
+        <input type="text" id="product" placeholder="Enter product name">
+        <label for="price">Price: </label>
+        <input type="number" id="price" placeholder="Enter price" min="0" step="0.01">
+        <label for="quantity">Quantity: </label>
+        <input type="number" id="quantity" placeholder="Enter quantity" min="1">
+        <button class="btn" onclick="addItem()">Add to Cart</button>
+    </div>
+
+    <h3>Cart</h3>
+    <table id="cart">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Cart items will go here -->
+        </tbody>
+    </table>
+
+    <div class="total">Total: $<span id="totalAmount">0.00</span></div>
+    <button class="btn" id="checkoutBtn" onclick="checkout()" disabled>Checkout</button>
+</div>
+
+<script>
+    let cart = [];
+    let totalAmount = 0;
+
+    function addItem() {
+        const product = document.getElementById('product').value;
+        const price = parseFloat(document.getElementById('price').value);
+        const quantity = parseInt(document.getElementById('quantity').value);
+
+        if (!product || price <= 0 || quantity <= 0) {
+            alert('Please enter valid product details');
+            return;
+        }
+
+        const item = {
+            product: product,
+            price: price,
+            quantity: quantity,
+            total: price * quantity
+        };
+
+        cart.push(item);
+        totalAmount += item.total;
+        updateCart();
+    }
+
+    function removeItem(index) {
+        totalAmount -= cart[index].total;
+        cart.splice(index, 1);
+        updateCart();
+    }
+
+    function updateCart() {
+        const cartTable = document.getElementById('cart').getElementsByTagName('tbody')[0];
+        cartTable.innerHTML = '';
+
+        cart.forEach((item, index) => {
+            const row = cartTable.insertRow();
+            row.innerHTML = `
+                <td>${item.product}</td>
+                <td>$${item.price.toFixed(2)}</td>
+                <td>${item.quantity}</td>
+                <td>$${item.total.toFixed(2)}</td>
+                <td><button class="btn btn-remove" onclick="removeItem(${index})">Remove</button></td>
+            `;
+        });
+
+        document.getElementById('totalAmount').textContent = totalAmount.toFixed(2);
+        document.getElementById('checkoutBtn').disabled = cart.length === 0;
+    }
+
+    function checkout() {
+        alert(`Total amount to be paid: $${totalAmount.toFixed(2)}`);
+        cart = [];
+        totalAmount = 0;
+        updateCart();
+    }
+</script>
+
 </body>
 </html>
