@@ -1,0 +1,20 @@
+{
+  "name": "electron",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "keywords": [
+    "electron",
+    "pos",
+    "ts"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^31.3.1"
+  }
+}
